@@ -2,7 +2,7 @@ from setuptools import setup
 from glob import glob
 import os
 
-package_name = 'ros2_python_template'
+package_name = 'gazebo_multisim_server'
 pkg = package_name
 
 setup(
