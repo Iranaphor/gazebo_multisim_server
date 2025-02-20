@@ -1,0 +1,66 @@
+---
+session: aoc_gazebo_server
+init_cmd: |
+  #exec /bin/bash
+  cd @TMULE_CONFIG_DIR@ || true
+  set -o pipefail
+
+  ###########################
+  # Source installed packages
+  source /opt/ros/humble/setup.bash
+  source /usr/share/colcon_cd/function/colcon_cd.sh   # Enable ros2 cd
+  export _colcon_cd_root=/opt/ros/humble/
+  source /usr/share/colcon_argcomplete/hook/colcon-argcomplete.bash  # Enable ros2 tab completion
+
+  ###########################
+  # Source workspace packages
+  export WS_DIR=$HOME/ros2_ws
+  [ -f $WS_DIR/install/setup.bash ] && source $WS_DIR/install/setup.bash
+
+  #############################
+  # Source Environment Template
+  PKG_LIST=$(ros2 pkg list)
+  SEARCH="environment_template"
+  if [[ "$PKG_LIST" == *"$SEARCH"* ]]; then
+      export ROS_ENV_TEMPLATE=$(ros2 pkg prefix environment_template)/share/environment_template
+      [ -f $ROS_ENV_TEMPLATE/config/environment.sh ] && source $ROS_ENV_TEMPLATE/config/environment.sh
+  fi
+
+  #############################
+  # Include extra models
+  GAZEBO_MODEL_EXTRAS=$HOME/docker_workspaces/aoc_strawberry_scenario/aoc_strawberry_scenario_bringup/models
+  GAZEBO_MODEL_PATH="$GAZEBO_MODEL_PATH:$GAZEBO_MODEL_EXTRAS"
+
+  ############################
+  # Set ROS Domain Information
+  export ROS_DOMAIN_ID=19
+  export ROS_LOCALHOST_ONLY=0
+  echo "ROS Domain ID - $ROS_DOMAIN_ID (local only = $ROS_LOCALHOST_ONLY)"
+
+  ############################
+  # Set Zenoh Information
+  ZENOH_TCP_LOCAL=tcp/172.17.0.1:7447
+  ZENOH_NAME=/coordination_server
+  #ZENOH_GZ_SERVER_CONF=$(ros2 pkg prefix gazebo_multisim_server)/share/gazebo_multisim_server/config/zenoh_gz_server_config.json5
+
+  ################
+  # ROS2 cli tools
+  export RCUTILS_CONSOLE_OUTPUT_FORMAT="{severity}: {message}"
+  export RCUTILS_COLORIZED_OUTPUT=1
+
+windows:
+
+- name: zenoh_endpoint
+  panes:
+    - zenoh-bridge-ros2dds
+    - ros2 topic list
+
+
+- name: environment_gazebo
+  panes:
+    - ros2 launch gazebo_ros gazebo.launch.py world:=$GAZEBO_WORLD_FILE --debug
+
+
+#- name: zenoh_connection
+#  panes:
+#    - zenoh-bridge-ros2dds -c $ZENOH_GZ_SERVER_CONF --namespace /bob --listen $ZENOH_TCP_REMOTE
