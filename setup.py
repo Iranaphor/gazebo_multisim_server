@@ -21,6 +21,8 @@ setup(
     license='TODO: License declaration',
     entry_points={
         'console_scripts': [
+            'topics_to_spawnservice.py = gazebo_multisim_server.topics_to_spawnservice:main',
+            'spawnservice_to_topic.py = gazebo_multisim_server.spawnservice_to_topic:main',
         ],
     },
 )

@@ -61,6 +61,6 @@ windows:
     - ros2 launch gazebo_ros gazebo.launch.py world:=$GAZEBO_WORLD_FILE --debug
 
 
-#- name: zenoh_connection
-#  panes:
-#    - zenoh-bridge-ros2dds -c $ZENOH_GZ_SERVER_CONF --namespace /bob --listen $ZENOH_TCP_REMOTE
+- name: spawnservice_handler
+  panes:
+    - ros2 run zenoh_multisim_server topics_to_spawnservice.py
