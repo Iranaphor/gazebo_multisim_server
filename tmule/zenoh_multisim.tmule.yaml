@@ -60,7 +60,7 @@ windows:
   panes:
     - ros2 launch gazebo_ros gazebo.launch.py world:=$GAZEBO_WORLD_FILE --debug
 
-
 - name: spawnservice_handler
   panes:
     - ros2 run zenoh_multisim_server topics_to_spawnservice.py
+    - ros2 topic echo /spawn_entity std_msgs/msg/String
