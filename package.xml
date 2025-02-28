@@ -13,6 +13,43 @@
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
 
+  <!--
+  <depend>gazebo_ros</depend>
+  <depend>gazebo-ros2-control</depend>
+  <depend>gazebo-plugins</depend>
+  <depend>livox-ros-driver</depend>
+  <depend>ros2-control</depend>
+  <depend>ros2-controllers</depend>
+ros-humble-gazebo-dev
+ros-humble-gazebo-model-attachment-plugin
+ros-humble-gazebo-model-attachment-plugin-dbgsym
+ros-humble-gazebo-model-attachment-plugin-msgs
+ros-humble-gazebo-model-attachment-plugin-msgs-dbgsym
+ros-humble-gazebo-msgs
+ros-humble-gazebo-msgs-dbgsym
+ros-humble-gazebo-no-physics-plugin
+ros-humble-gazebo-no-physics-plugin-dbgsym
+ros-humble-gazebo-planar-move-plugin
+ros-humble-gazebo-planar-move-plugin-dbgsym
+ros-humble-gazebo-plugins
+ros-humble-gazebo-plugins-dbgsym
+ros-humble-gazebo-ros
+ros-humble-gazebo-ros2-control
+ros-humble-gazebo-ros2-control-dbgsym
+ros-humble-gazebo-ros2-control-demos
+ros-humble-gazebo-ros2-control-demos-dbgsym
+ros-humble-gazebo-ros-dbgsym
+ros-humble-gazebo-ros-pkgs
+ros-humble-gazebo-set-joint-positions-plugin
+ros-humble-gazebo-set-joint-positions-plugin-dbgsym
+ros-humble-gazebo-video-monitor-interfaces
+ros-humble-gazebo-video-monitor-interfaces-dbgsym
+ros-humble-gazebo-video-monitor-plugins
+ros-humble-gazebo-video-monitor-plugins-dbgsym
+ros-humble-gazebo-video-monitors
+ros-humble-gazebo-video-monitor-utils
+  -->
+
   <export>
     <build_type>ament_python</build_type>
   </export>

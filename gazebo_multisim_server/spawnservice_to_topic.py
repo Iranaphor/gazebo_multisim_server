@@ -41,7 +41,7 @@ class ServiceToTopic(Node):
                 "z": request.initial_pose.position.z,
                 "namespace": request.robot_namespace,
             }
-            
+
             # Identify file references in the XML
             file_references = self.extract_file_paths(request.xml)
 

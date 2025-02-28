@@ -17,6 +17,10 @@ init_cmd: |
   export WS_DIR=$HOME/ros2_ws
   [ -f $WS_DIR/install/setup.bash ] && source $WS_DIR/install/setup.bash
 
+  ###########################
+  # Source Gazebo setup directly
+  . /usr/share/gazebo/setup.sh
+
   #############################
   # Source Environment Template
   PKG_LIST=$(ros2 pkg list)
@@ -48,19 +52,28 @@ init_cmd: |
   export RCUTILS_CONSOLE_OUTPUT_FORMAT="{severity}: {message}"
   export RCUTILS_COLORIZED_OUTPUT=1
 
+  clear -x
+
 windows:
 
 - name: zenoh_endpoint
   panes:
-    - zenoh-bridge-ros2dds
-    - ros2 topic list
-
+    - "zenoh-bridge-ros2dds | sed 's|.*zenoh_plugin_ros2dds||g'"
+    - while [ true ] ; do clear ; ros2 topic list ; sleep 1 ; echo "..." ; sleep 1 ; done
+    - while [ true ] ; do clear ; ros2 service list ; sleep 1 ; echo "..." ; sleep 1 ; done
+    - while [ true ] ; do clear ; ros2 node list ; sleep 1 ; echo "..." ; sleep 1 ; done
 
 - name: environment_gazebo
   panes:
-    - ros2 launch gazebo_ros gazebo.launch.py world:=$GAZEBO_WORLD_FILE --debug
+    - ros2 launch gazebo_ros gazebo.launch.py world:=$GAZEBO_WORLD_FILE
 
 - name: spawnservice_handler
   panes:
-    - ros2 run zenoh_multisim_server topics_to_spawnservice.py
-    - ros2 topic echo /spawn_entity std_msgs/msg/String
+    - ros2 run gazebo_multisim_server topics_to_spawnservice.py
+    - ros2 topic echo /spawn_entity_srv_content std_msgs/msg/String
+    - ros2 topic echo /spawn_entity_plugins_installed diagnostic_msgs/msg/KeyValue
+
+- name: validator
+  panes:
+    - ros2 run gazebo_multisim_server validate_model.py
+    - ros2 topic echo /diagnostics diagnostic_msgs/msg/DiagnosticArray

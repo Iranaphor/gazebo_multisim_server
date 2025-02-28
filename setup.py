@@ -11,7 +11,7 @@ setup(
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages', [f'resource/{pkg}']),
-        ('share/{pkg}', ['package.xml']),
+        (f'share/{pkg}', ['package.xml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -23,6 +23,7 @@ setup(
         'console_scripts': [
             'topics_to_spawnservice.py = gazebo_multisim_server.topics_to_spawnservice:main',
             'spawnservice_to_topic.py = gazebo_multisim_server.spawnservice_to_topic:main',
+            'validate_model.py = gazebo_multisim_server.validate_model:main',
         ],
     },
 )
