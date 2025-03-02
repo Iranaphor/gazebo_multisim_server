@@ -71,12 +71,41 @@ class ServiceToTopic(Node):
             response.success = False
             response.status_message = str(e)
             return response
+        
 
     def extract_file_paths(self, xml_string):
-        """ Extracts file paths from XML content, looking for .dae, .urdf, .sdf, .xacro files. """
-        file_extensions = (".dae", ".urdf", ".sdf", ".xacro")
-        file_paths = re.findall(r'["\'](.*?(' + '|'.join(file_extensions) + r'))["\']', xml_string)
-        return [fp[0] for fp in file_paths]  # Extract the full path from regex matches
+        """
+        Extract file paths from XML content, looking for .dae, .urdf, .sdf,
+        .xacro, .yaml, or .csv files. Handles two common cases:
+        1) Paths inside quotes (e.g. filename="..." or '...')
+        2) Paths inside element tags (e.g. <parameters>...</parameters>)
+        """
+        # Extend the set of file extensions:
+        file_extensions = ('.dae', '.urdf', '.sdf', '.xacro', '.yaml', '.csv')
+
+        # We create a single pattern that tries to match either:
+        #   1) A path in quotes (group 1)
+        #   2) A path in the > ... < tag content (group 2)
+        #
+        # Explanation:
+        #   - (?:["\']([^"\'<>]*\.(?:extensions))["\']) captures quoted paths
+        #   - |>([^<>]*\.(?:extensions))< captures unquoted paths between > and <
+        #
+        pattern = (
+            r'(?:["\']([^"\'<>]*\.(?:dae|urdf|sdf|xacro|yaml|csv))["\'])'
+            r'|>([^<>]*\.(?:dae|urdf|sdf|xacro|yaml|csv))<'
+        )
+
+        # Run the findall; each match is a tuple (group1, group2)
+        matches = re.findall(pattern, xml_string)
+
+        # Collect whichever capturing group is non-empty
+        file_paths = []
+        for g1, g2 in matches:
+            file_paths.append(g1 if g1 else g2)
+
+        return file_paths
+
 
     def read_file(self, file_path):
         """ Reads the content of a file if it exists. """
