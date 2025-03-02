@@ -103,7 +103,7 @@ class TopicsToService(Node):
 
         # Remove any leading "file://"
         local_path = original_file_path.replace('file://', '')
-        
+
         # We'll store files in subfolders under this package.
         pkg = get_package_share_directory('gazebo_multisim_server')
 
@@ -143,6 +143,16 @@ class TopicsToService(Node):
 
         return local_path
 
+    def apply_namespace_to_paramater_yaml(self, data):
+        import yaml
+        print('---')
+        print(data)
+        print('---')
+        data = yaml.dump({'/**': yaml.safe_load(data)})
+        print('---')
+        print(data)
+        print('---')
+        return data
 
     def file_callback(self, msg, file_path, namespace):
         # """ Saves received file content and checks if all required files are received. """
@@ -162,6 +172,10 @@ class TopicsToService(Node):
             if not isinstance(data_to_write, str):
                 import json
                 data_to_write = json.dumps(data_to_write, indent=2)
+
+            # If data should come from yaml file, apply namespace to the nodes in it
+            if '.yaml' in file_path:
+                data_to_write = self.apply_namespace_to_paramater_yaml(data_to_write)
 
             with open(local_path, 'w') as f:
                 f.write(data_to_write)

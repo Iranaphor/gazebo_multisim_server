@@ -43,8 +43,8 @@ init_cmd: |
 
   ############################
   # Set Zenoh Information
-  ZENOH_TCP_LOCAL=tcp/172.17.0.1:7447
-  ZENOH_NAME=/coordination_server
+  #ZENOH_TCP_LOCAL=tcp/172.17.0.1:7447
+  #ZENOH_NAME=/coordination_server
   #ZENOH_GZ_SERVER_CONF=$(ros2 pkg prefix gazebo_multisim_server)/share/gazebo_multisim_server/config/zenoh_gz_server_config.json5
 
   ################

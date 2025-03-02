@@ -1,0 +1,28 @@
+---
+session: gz_aoc_strawberry_scenario
+init_cmd: |
+  #exec /bin/bash
+  cd @TMULE_CONFIG_DIR@ || true
+  set -o pipefail
+
+windows:
+
+- name: gazebo
+  panes:
+    - ros2 launch environment_common environment.launch.py world:=$GAZEBO_WORLD
+
+
+- name: robot_1
+  panes:
+    - ros2 launch aoc_strawberry_scenario_bringup only_robot_sim.launch.py robot_platform:=$ROBOT_PLATFORM robot_name:=alphie
+
+
+- name: robot_2
+  panes:
+    - ros2 launch aoc_strawberry_scenario_bringup only_robot_sim.launch.py robot_platform:=$ROBOT_PLATFORM robot_name:=bettie
+
+
+# for this to work we need the following actions to be made:
+# 1. <namespace/> needs to be removed from the xacro
+# 2. namepsaces must be permitted in the xacro topic definitions
+# 3. namespaces must be possible in toponav
