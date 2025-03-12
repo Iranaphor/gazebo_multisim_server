@@ -46,6 +46,7 @@ init_cmd: |
   #ZENOH_TCP_LOCAL=tcp/172.17.0.1:7447
   #ZENOH_NAME=/coordination_server
   #ZENOH_GZ_SERVER_CONF=$(ros2 pkg prefix gazebo_multisim_server)/share/gazebo_multisim_server/config/zenoh_gz_server_config.json5
+  #export XML_MODEL="$HOME/aoc_strawberry_scenario_ws/src/external_packages/gazebo_multisim_server/config/franky.xml"
 
   ################
   # ROS2 cli tools
@@ -66,14 +67,20 @@ windows:
 - name: environment_gazebo
   panes:
     - ros2 launch gazebo_ros gazebo.launch.py world:=$GAZEBO_WORLD_FILE
-
-- name: spawnservice_handler
-  panes:
+#
+#- name: spawnservice_handler
+#  panes:
     - ros2 run gazebo_multisim_server topics_to_spawnservice.py
-    - ros2 topic echo /spawn_entity_srv_content std_msgs/msg/String
-    - ros2 topic echo /spawn_entity_plugins_installed diagnostic_msgs/msg/KeyValue
+    - nano +215 ../gazebo_multisim_server/topics_to_spawnservice.py
+#    - cd $HOME; clear -x
 
 - name: validator
   panes:
-    - ros2 run gazebo_multisim_server validate_model.py
-    - ros2 topic echo /diagnostics diagnostic_msgs/msg/DiagnosticArray
+#    - ros2 topic echo /spawn_entity_plugins_installed diagnostic_msgs/msg/KeyValue
+    - ros2 topic echo /spawn_entity_srv_content std_msgs/msg/String -f | sed 's|\\"|\"|g'
+    - ros2 topic echo /spawn_entity_srv_meta_content std_msgs/msg/String -f
+
+#- name: validator
+#  panes:
+#    - ros2 run gazebo_multisim_server validate_model.py
+#    - ros2 topic echo /diagnostics diagnostic_msgs/msg/DiagnosticArray

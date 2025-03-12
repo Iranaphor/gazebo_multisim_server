@@ -1,0 +1,16 @@
+<robot name="hunter_pltf">
+  <link name="base_link"/>
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>/home/ros/aoc_strawberry_scenario_ws/install/gazebo_multisim_server/share/gazebo_multisim_server/config/ackermann_like_controller.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+</robot>

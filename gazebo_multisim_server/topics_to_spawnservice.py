@@ -2,7 +2,7 @@ import rclpy
 import json
 import os
 import re
-
+from copy import deepcopy
 import xml.etree.ElementTree as ET
 import ctypes.util
 
@@ -31,7 +31,8 @@ class TopicsToService(Node):
         self.file_contents = {}
 
         # Create publishers for inspection
-        self.pub = self.create_publisher(String, '/spawn_entity_srv_content', self.get_qos())
+        self.xml_pub = self.create_publisher(String, '/spawn_entity_srv_content', self.get_qos())
+        self.meta_pub = self.create_publisher(String, '/spawn_entity_srv_meta_content', self.get_qos())
         self.all_installed_plugins = self.create_publisher(KeyValue, '/spawn_entity_plugins_installed', self.get_qos())
 
         # Timer to scan for new `/spawn_entity` topics dynamically
@@ -200,11 +201,24 @@ class TopicsToService(Node):
         #     self.get_logger().error(f'Error writing file {file_path}: {str(e)}')
 
 
-    def rename_topics_to_be_local(self, xml):
+    def rename_topics_to_be_local(self, xml, namespace):
+        name = namespace.replace('/','')
 
         # topic (no qos)
         xml = xml.replace('name="/', 'name="')
-        xml = xml.replace('<namespace/>', '')
+        xml = xml.replace('<namespace/>', '') #remove dead namespace declarations
+        xml = xml.replace('<ros>',
+                         f'<ros>\n<namespace>{name}</namespace>') # apply namespaces to every ros node
+
+	# explicit remappigns
+        #xml = xml.replace('<plugin name="', f'<plugin name="{name}') # TODO: do this ia xml pkg
+
+        xml = xml.replace('name=\"back_lidar_link_plugin\"',
+                         f'name=\"{name}_back_lidar_link_plugin\"')
+
+        xml = xml.replace('name=\"gazebo_ros2_control\">',
+                         f'name=\"{name}_gazebo_ros2_control\">')
+
 
         # topic (with qos)
         # TODO: this
@@ -274,7 +288,7 @@ class TopicsToService(Node):
         # Clean up the XML and rewrite paths
         processed_xml = data.get("xml", "<sdf></sdf>")
         processed_xml = self.rename_files_to_be_local(processed_xml)
-        processed_xml = self.rename_topics_to_be_local(processed_xml)
+        processed_xml = self.rename_topics_to_be_local(processed_xml, namespace)
 
         # Form service request object
         request = SpawnEntity.Request()
@@ -289,7 +303,12 @@ class TopicsToService(Node):
         client = self.create_client(SpawnEntity, service_name)
 
         self.check_installed_plugins(processed_xml)
-        self.pub.publish(String(data=request.xml))
+        self.xml_pub.publish(String(data=request.xml))
+
+        r2 = deepcopy(request)
+        r2.xml = "removed"
+        s = str(r2)
+        self.meta_pub.publish(String(data=s))
 
         if client.wait_for_service(timeout_sec=2.0):
             future = client.call_async(request)
