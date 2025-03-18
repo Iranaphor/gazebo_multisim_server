@@ -32,7 +32,8 @@ init_cmd: |
 
   #############################
   # Include extra models
-  GAZEBO_MODEL_EXTRAS=$HOME/docker_workspaces/aoc_strawberry_scenario/aoc_strawberry_scenario_bringup/models
+  BRINGUP=$(ros2 pkg prefix aoc_strawberry_scenario_bringup)
+  GAZEBO_MODEL_EXTRAS=$BRINGUP/share/aoc_strawberry_scenario_bringup/models
   GAZEBO_MODEL_PATH="$GAZEBO_MODEL_PATH:$GAZEBO_MODEL_EXTRAS"
 
   ############################
@@ -60,7 +61,8 @@ windows:
 - name: environment_gazebo
   panes:
     - ros2 launch gazebo_ros gazebo.launch.py world:=$GAZEBO_WORLD_FILE
-  check: "ros2 topic echo /performance_metrics gazebo_msgs/msg/PerformanceMetrics --once"
+    - ros2 run gazebo_multisim_server horologist.py
+  check: "echo 'waiting for gazebo to finish loading...' ; ros2 topic echo /performance_metrics gazebo_msgs/msg/PerformanceMetrics --once"
 
 - name: zenoh_endpoint
   panes:
