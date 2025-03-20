@@ -67,9 +67,10 @@ windows:
 - name: zenoh_endpoint
   panes:
     - "zenoh-bridge-ros2dds | sed 's|.*zenoh_plugin_ros2dds||g'"
-    - while [ true ] ; do clear ; ros2 topic list ; sleep 1 ; echo "..." ; sleep 1 ; done
-    - while [ true ] ; do clear ; ros2 service list ; sleep 1 ; echo "..." ; sleep 1 ; done
-    - while [ true ] ; do clear ; ros2 node list ; sleep 1 ; echo "..." ; sleep 1 ; done
+    - clear
+#    - while [ true ] ; do clear ; ros2 topic list ; sleep 1 ; echo "..." ; sleep 1 ; done
+#    - while [ true ] ; do clear ; ros2 service list ; sleep 1 ; echo "..." ; sleep 1 ; done
+#    - while [ true ] ; do clear ; ros2 node list ; sleep 1 ; echo "..." ; sleep 1 ; done
 
 - name: connection_handler
   panes:
