@@ -25,6 +25,7 @@ setup(
             'topics_to_spawnservice.py = gazebo_multisim_server.topics_to_spawnservice:main',
             'spawnservice_to_topic.py = gazebo_multisim_server.spawnservice_to_topic:main',
             'validate_model.py = gazebo_multisim_server.validate_model:main',
+            'datum_to_topic.py = gazebo_multisim_server.datum_to_topic:main',
             'spawn_entity_from_xml.py = gazebo_multisim_server.spawn_entity_from_xml:main'
         ],
     },
