@@ -64,6 +64,13 @@ windows:
     - ros2 run gazebo_multisim_server horologist.py
   check: "echo 'waiting for gazebo to finish loading...' ; ros2 topic echo /performance_metrics gazebo_msgs/msg/PerformanceMetrics --once"
 
+- name: republishers
+  panes:
+    - ros2 run gazebo_multisim_server repub_points.py
+    - ros2 run gazebo_multisim_server topic_to_datum.py
+    - ros2 topic echo /david/datum sensor_msgs/msg/NavSatFix
+    - cd $HOME; clear -x
+
 - name: zenoh_endpoint
   panes:
     - "zenoh-bridge-ros2dds | sed 's|.*zenoh_plugin_ros2dds||g'"
@@ -79,8 +86,8 @@ windows:
 - name: spawnservice_handler
   panes:
     - ros2 run gazebo_multisim_server topics_to_spawnservice.py
-    - echo "nano +215 ../gazebo_multisim_server/topics_to_spawnservice.py"
     - cd $HOME; clear -x
+
 
 - name: debug
   panes:

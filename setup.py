@@ -28,6 +28,8 @@ setup(
             'new_robot_acknowledgement.py = gazebo_multisim_server.new_robot_acknowledgement:main',
             'topic_analyser_tui.py = gazebo_multisim_server.topic_analyser_tui:main',
             'horologist.py = gazebo_multisim_server.horologist:main',
+            'repub_points.py = gazebo_multisim_server.repub_points:main',
+            'topic_to_datum.py = gazebo_multisim_server.topic_to_datum:main',
             'spawn_entity_from_xml.py = gazebo_multisim_server.spawn_entity_from_xml:main'
         ],
     },
