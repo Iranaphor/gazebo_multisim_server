@@ -207,18 +207,33 @@ class TopicsToService(Node):
         # topic (no qos)
         xml = xml.replace('name="/', 'name="')
         xml = xml.replace('<namespace/>', '') #remove dead namespace declarations
-        xml = xml.replace('<ros>',
-                         f'<ros>\n<namespace>{name}</namespace>') # apply namespaces to every ros node
+        #xml = xml.replace('<ros>',
+        #                 f'<ros>\n<namespace>{name}</namespace>') # apply namespaces to every ros node
+        xml = xml.replace('name=\"gazebo_ros2_control\">',
+                          'name=\"gazebo_ros2_control\"><ros><namespace>franky</namespace></ros>')
 
-	# explicit remappigns
+        # explicit remappigns
         #xml = xml.replace('<plugin name="', f'<plugin name="{name}') # TODO: do this ia xml pkg
+        """xml = xml.replace('name=\"imu1_controller\"',
+                         f'name=\"{name}_imu1_controller\"')
+
+        xml = xml.replace('name=\"front_camera_camera_controller\"',
+                         f'name=\"{name}_front_camera_camera_controller\"')
+
+        xml = xml.replace('name=\"back_camera_camera_controller\"',
+                         f'name=\"{name}_back_camera_camera_controller\"')
+
+        xml = xml.replace('name=\"gps_base_controller\"',
+                         f'name=\"{name}_gps_base_controller\"')
+
+        xml = xml.replace('name=\"front_lidar_link_plugin\"',
+                         f'name=\"{name}_front_lidar_link_plugin\"')
 
         xml = xml.replace('name=\"back_lidar_link_plugin\"',
                          f'name=\"{name}_back_lidar_link_plugin\"')
 
         xml = xml.replace('name=\"gazebo_ros2_control\">',
-                         f'name=\"{name}_gazebo_ros2_control\">')
-
+                         f'name=\"{name}_gazebo_ros2_control\">')"""
 
         # topic (with qos)
         # TODO: this
