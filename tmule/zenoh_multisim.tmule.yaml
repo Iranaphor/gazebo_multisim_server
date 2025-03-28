@@ -29,10 +29,11 @@ init_cmd: |
       export ROS_ENV_TEMPLATE=$(ros2 pkg prefix environment_template)/share/environment_template
       [ -f $ROS_ENV_TEMPLATE/config/environment.sh ] && source $ROS_ENV_TEMPLATE/config/environment.sh
   fi
-
+  
   #############################
   # Include extra models
   BRINGUP=$(ros2 pkg prefix aoc_strawberry_scenario_bringup)
+  GAZEBO_WORLD_PATH=$BRINGUP/worlds/gazebo_world.world
   GAZEBO_MODEL_EXTRAS=$BRINGUP/share/aoc_strawberry_scenario_bringup/models
   GAZEBO_MODEL_PATH="$GAZEBO_MODEL_PATH:$GAZEBO_MODEL_EXTRAS"
 
@@ -47,6 +48,9 @@ init_cmd: |
   #ZENOH_TCP_LOCAL=tcp/172.17.0.1:7447
   #ZENOH_NAME=/coordination_server
   #ZENOH_GZ_SERVER_CONF=$(ros2 pkg prefix gazebo_multisim_server)/share/gazebo_multisim_server/config/zenoh_gz_server_config.json5
+
+  ZENOH_GZ_SERVER_CONF=/home/ros/aoc_strawberry_scenario_ws/src/external_packages/gazebo_multisim_server/config/zenoh_server_config.json5
+
   export XML_MODEL="$HOME/aoc_strawberry_scenario_ws/src/external_packages/gazebo_multisim_server/config/franky.xml"
 
   ################
@@ -74,10 +78,9 @@ windows:
 - name: zenoh_endpoint
   panes:
     - "zenoh-bridge-ros2dds | sed 's|.*zenoh_plugin_ros2dds||g'"
+    #- "zenoh-bridge-ros2dds -c $ZENOH_GZ_SERVER_CONF | sed 's|.*zenoh_plugin_ros2dds||g'"
+    - rqt_graph
     - clear
-#    - while [ true ] ; do clear ; ros2 topic list ; sleep 1 ; echo "..." ; sleep 1 ; done
-#    - while [ true ] ; do clear ; ros2 service list ; sleep 1 ; echo "..." ; sleep 1 ; done
-#    - while [ true ] ; do clear ; ros2 node list ; sleep 1 ; echo "..." ; sleep 1 ; done
 
 - name: connection_handler
   panes:
