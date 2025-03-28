@@ -1,0 +1,20 @@
+{
+  "plugins": {
+    "ros2dds": { 
+      "allow": {
+        "publishers": [  //zenoh will subscribe to a local /pub publisher once something on the other end of zenoh wants the data
+          ".*/clock",
+          ".*/pub"
+        ],
+        "subscribers": [  //zenoh will publish to a local /sub once something locally desires the data
+          ".*/sub",
+          ".*/clock"
+        ],
+        "service_servers": [],
+        "service_clients": [],
+        "action_servers": [],
+        "action_clients": []
+      }
+    }
+  }
+}
