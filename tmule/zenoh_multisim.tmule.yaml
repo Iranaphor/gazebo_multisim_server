@@ -65,40 +65,32 @@ windows:
 - name: environment_gazebo
   panes:
     - ros2 launch gazebo_ros gazebo.launch.py world:=$GAZEBO_WORLD_FILE
-    - ros2 run gazebo_multisim_server horologist.py
   check: "echo 'waiting for gazebo to finish loading...' ; ros2 topic echo /performance_metrics gazebo_msgs/msg/PerformanceMetrics --once"
+
+- name: connection_handler
+  panes:
+    - ros2 run gazebo_multisim_server new_robot_acknowledgement.py
+    - ros2 run gazebo_multisim_server horologist.py
 
 - name: republishers
   panes:
     - ros2 run gazebo_multisim_server repub_points.py
     - ros2 run gazebo_multisim_server topic_to_datum.py
-    #- ros2 topic echo /david/datum sensor_msgs/msg/NavSatFix
     - cd $HOME; clear -x
 
 - name: zenoh_endpoint
   panes:
-    #- "zenoh-bridge-ros2dds | sed 's|.*zenoh_plugin_ros2dds||g'"
-    - "zenoh-bridge-ros2dds -c $ZENOH_GZ_SERVER_CONF | sed 's|.*zenoh_plugin_ros2dds||g'"
-    - rqt_graph
+    - zenoh-bridge-ros2dds -c $ZENOH_GZ_SERVER_CONF
+    #- "zenoh-bridge-ros2dds -c $ZENOH_GZ_SERVER_CONF | sed 's|.*zenoh_plugin_ros2dds||g'"
+    #- "zenoh-bridge-ros2dds -c $ZENOH_GZ_SERVER_CONF --connect tcp/165.232.111.154:7447 | sed 's|.*zenoh_plugin_ros2dds||g'"
     - clear
-
-- name: connection_handler
-  panes:
-    - ros2 run gazebo_multisim_server new_robot_acknowledgement.py
 
 - name: spawnservice_handler
   panes:
     - ros2 run gazebo_multisim_server topics_to_spawnservice.py
     - cd $HOME; clear -x
 
-
-# - name: debug
-#   panes:
-#     - ros2 topic echo /spawn_entity_plugins_installed diagnostic_msgs/msg/KeyValue
-#     - ros2 topic echo /spawn_entity_srv_content std_msgs/msg/String -f | sed 's|\\"|\"|g'
-#     - ros2 topic echo /spawn_entity_srv_meta_content std_msgs/msg/String -f
-
 - name: validator
   panes:
     - ros2 run gazebo_multisim_server validate_model.py
-    # - ros2 topic echo /diagnostics diagnostic_msgs/msg/DiagnosticArray
+    - cd $HOME; clear -x

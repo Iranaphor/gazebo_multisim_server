@@ -109,19 +109,11 @@ class TopicsToService(Node):
         pkg = get_package_share_directory('gazebo_multisim_server')
 
         # -- Example heuristics below --
-        # 1) If path includes '/meshes/' or ends with '.dae', place in pkg/meshes/
+        # 1) If path includes '/meshes/' or ends with '.', place in pkg/meshes/
         # 2) If path includes '/config/' or ends with '.yaml', place in pkg/config/
         # 3) If it ends with '.csv' or has '/scan_mode/' for Livox, place in pkg/csv/
 
-        if '/meshes/' in local_path or local_path.endswith('.dae'):
-            # Take everything after '/meshes/' if it exists, otherwise just use basename
-            if '/meshes/' in local_path:
-                relative_part = local_path.split('/meshes/', 1)[1]
-                local_path = os.path.join(pkg, 'meshes', relative_part)
-            else:
-                local_path = os.path.join(pkg, 'meshes', os.path.basename(local_path))
-
-        elif '/config/' in local_path or local_path.endswith('.yaml'):
+        if '/config/' in local_path or local_path.endswith('.yaml'):
             # If there's a /config/, keep path structure after that
             if '/config/' in local_path:
                 relative_part = local_path.split('/config/', 1)[1]
@@ -129,14 +121,14 @@ class TopicsToService(Node):
             else:
                 local_path = os.path.join(pkg, 'config', os.path.basename(local_path))
 
-        elif local_path.endswith('.csv') or '/scan_mode/' in local_path:
-            # CSV or a known subpath for Livox scans
-            # Similar approach to keep sub-structure after '/scan_mode/', if you prefer
-            if '/scan_mode/' in local_path:
-                relative_part = local_path.split('/scan_mode/', 1)[1]
-                local_path = os.path.join(pkg, 'csv', relative_part)
-            else:
-                local_path = os.path.join(pkg, 'csv', os.path.basename(local_path))
+        #elif local_path.endswith('.csv') or '/scan_mode/' in local_path:
+        #    # CSV or a known subpath for Livox scans
+        #    # Similar approach to keep sub-structure after '/scan_mode/', if you prefer
+        #    if '/scan_mode/' in local_path:
+        #        relative_part = local_path.split('/scan_mode/', 1)[1]
+        #        local_path = os.path.join(pkg, 'csv', relative_part)
+        #    else:
+        #        local_path = os.path.join(pkg, 'csv', os.path.basename(local_path))
 
         else:
             # Fallback if none of the above patterns match:
@@ -256,8 +248,8 @@ class TopicsToService(Node):
         # 1) MESHES
         # ------------------------
         # Match file://ANYTHING/meshes/ and rewrite to file://PKG/meshes/
-        # e.g. "file:///home/ros/XYZ/meshes/chassis.dae"
-        # -> "file://.../gazebo_multisim_server/meshes/chassis.dae"
+        # e.g. "file:///home/ros/XYZ/meshes/chassis."
+        # -> "file://.../gazebo_multisim_server/meshes/chassis."
         replace_from_rgx = r'file://[^<"]*/meshes/'
         replace_with_str = f'file://{pkg}/meshes/'
         updated_xml = re.sub(replace_from_rgx, replace_with_str, xml)
@@ -286,13 +278,13 @@ class TopicsToService(Node):
         # Similar approach for CSV references. E.g.:
         #    <csv_file_name>/home/ros/.../mid360.csv</csv_file_name>
         #
-        csv_pattern = r'(?<=<csv_file_name>)([^<"]*\.csv)(?=</csv_file_name>)'
-        def replace_csv_path(match):
-            original_path = match.group(0)
-            filename = os.path.basename(original_path)
-            return f'{pkg}/csv/{filename}'  # or whichever subdir you prefer
-
-        updated_xml = re.sub(csv_pattern, replace_csv_path, updated_xml)
+        #csv_pattern = r'(?<=<csv_file_name>)([^<"]*\.csv)(?=</csv_file_name>)'
+        #def replace_csv_path(match):
+        #    original_path = match.group(0)
+        #    filename = os.path.basename(original_path)
+        #    return f'{pkg}/csv/{filename}'  # or whichever subdir you prefer
+        #
+        #updated_xml = re.sub(csv_pattern, replace_csv_path, updated_xml)
 
         return updated_xml
 
@@ -349,10 +341,10 @@ class TopicsToService(Node):
           - Unquoted references in tags (e.g. <parameters>...</parameters> or <csv_file_name>...</csv_file_name>).
         """
         pattern = (
-            # 1) Match quoted filenames: filename="something.dae"
-            r'(?:["\']([^"\'<>]*\.(?:dae|urdf|sdf|xacro|yaml|csv))["\'])'
+            # 1) Match quoted filenames: filename="something."
+            r'(?:["\']([^"\'<>]*\.(?:urdf|sdf|xacro|yaml))["\'])'
             # 2) Or match unquoted references: <parameters>something.yaml</parameters>
-            r'|>([^<>]*\.(?:dae|urdf|sdf|xacro|yaml|csv))<'
+            r'|>([^<>]*\.(?:urdf|sdf|xacro|yaml))<'
         )
 
         matches = re.findall(pattern, xml_string)

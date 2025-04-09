@@ -1,74 +1,65 @@
 {
   "plugins": {
-    "ros2dds": { 
-      "allow": {
-        "publishers": [ //zenoh will subscribe to a local /pub publisher once something on the other end of zenoh wants the data
-          // ".*/amcl_pose",
-          ".*/back_camera/points/world",
-          ".*/back_lidar/points",
-          // ".*/back_sensor/filtered_cloud",
-          // ".*/back_sensor/low_height/pointcloud",
-          // ".*/back_sensor/outlier_filter/pointcloud",
-          ".*/clock",
-          // ".*/cmd_vel",
-          // ".*/cmd_vel/joy",
-          // ".*/cmd_vel/nav",
-          // ".*/cmd_vel_teleop",
-          // ".*/datum",
-          ".*/diff_drive_controller/odom",
-          ".*/front_camera/points/world",
-          ".*/front_lidar/points",
-          // ".*/front_sensor/filtered_cloud",
-          // ".*/front_sensor/low_height/pointcloud",
-          // ".*/front_sensor/outlier_filter/pointcloud",
-          ".*/gps_base/fix",
-          ".*/gps_base/odometry",
-          ".*/gps_base/yaw",
-          ".*/joint_states",
-          // ".*/joy",
-          // ".*/joy/set_feedback",
-          ".*/kiss/odometry",
-          ".*/lidar/world/points",
-          // ".*/obstacles",
-          ".*/odom",
-          ".*/odometry/global",
-          ".*/odometry/local",
-          ".*/parameter_events",
-          // ".*/robot_description",
-          ".*/set_pose",
-          ".*/tf",
-          ".*/tf_static"
-        ],
-        "subscribers": [ //zenoh will publish to a local /sub once something locally desires the data
-          ".*/ackermann_like_controller/cmd_vel",
-          ".*/cmd_vel",
-          ".*/cmd_vel/joy",
-          ".*/cmd_vel/nav",
-          ".*/controller_server/transition_event",
-          ".*/datum",
-          ".*/diagnostics",
-          ".*/evaluation",
-          ".*/parameter_events",
-          ".*/robot_description",
-          ".*/rosout",
-          ".*/spawn_entity",
-          ".*/spawn_entity/file_content/ackermann_like_controller_yaml",
-          ".*/spawn_entity/file_content/chassis_dae",
-          ".*/spawn_entity/file_content/front_left_wheel_dae",
-          ".*/spawn_entity/file_content/front_right_wheel_dae",
-          ".*/spawn_entity/file_content/livox360_dae",
-          ".*/spawn_entity/file_content/mid360_csv",
-          ".*/spawn_entity/file_content/rear_left_wheel_dae",
-          ".*/spawn_entity/file_content/rear_right_wheel_dae",
-          ".*/spawn_entity/file_content/zed2_dae",
-          ".*/tf",
-          ".*/tf_static"
-        ],
-        "service_servers": [".*"],
-        "service_clients": [".*"],
-        "action_servers": [".*"],
-        "action_clients": [".*"]
+      "rest": {
+          "http_port": 8000
+      },
+      "remote_api": {
+          "websocket_port": 10000
+      },
+      "ros2dds": { 
+          // "namespace": "barry",
+          "allow": {
+              //zenoh will subscribe to a local /pub publisher once something on the other end of zenoh wants the data
+              "publishers": [
+                  ".*/back_camera/points/world",
+                  ".*/back_lidar/points",
+                  ".*/clock",
+                  ".*/diff_drive_controller/odom",
+                  ".*/front_camera/points/world",
+                  ".*/front_lidar/points",
+                  ".*/gps_base/fix",
+                  ".*/gps_base/odometry",
+                  ".*/gps_base/yaw",
+                  ".*/joint_states",
+                  ".*/kiss/odometry",
+                  ".*/lidar/world/points",
+                  ".*/odom",
+                  ".*/odometry/global",
+                  ".*/odometry/local",
+                  ".*/parameter_events",
+                  ".*/rosout",
+                  ".*/set_pose"
+              ],
+              //zenoh will publish to a local /sub once something locally desires the data
+              "subscribers": [
+                  ".*/ackermann_like_controller/cmd_vel",
+                  ".*/cmd_vel",
+                  ".*/cmd_vel/joy",
+                  ".*/cmd_vel/nav",
+                  ".*/controller_server/transition_event",
+                  ".*/datum",
+                  ".*/diagnostics",
+                  ".*/evaluation",
+                  ".*/parameter_events",
+                  ".*/robot_description",
+                  ".*/rosout",
+                  ".*/spawn_entity",
+                  ".*/spawn_entity/file_content/ackermann_like_controller_yaml",
+                  ".*/spawn_entity/file_content/chassis_dae",
+                  ".*/spawn_entity/file_content/front_left_wheel_dae",
+                  ".*/spawn_entity/file_content/front_right_wheel_dae",
+                  ".*/spawn_entity/file_content/livox360_dae",
+                //   ".*/spawn_entity/file_content/mid360_csv",
+                  ".*/spawn_entity/file_content/rear_left_wheel_dae",
+                  ".*/spawn_entity/file_content/rear_right_wheel_dae",
+                  ".*/spawn_entity/file_content/zed2_dae"
+              ],
+              "service_servers": [".*"],
+              "service_clients": [".*"],
+              "action_servers": [],
+              "action_clients": []
+          }
       }
-    }
-  }
+  },
+  "mode": "router"
 }
