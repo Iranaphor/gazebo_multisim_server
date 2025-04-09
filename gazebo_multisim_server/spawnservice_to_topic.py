@@ -75,13 +75,13 @@ class ServiceToTopic(Node):
 
     def extract_file_paths(self, xml_string):
         """
-        Extract file paths from XML content, looking for .dae, .urdf, .sdf,
+        Extract file paths from XML content, looking for .urdf, .sdf,
         .xacro, .yaml, or .csv files. Handles two common cases:
         1) Paths inside quotes (e.g. filename="..." or '...')
         2) Paths inside element tags (e.g. <parameters>...</parameters>)
         """
         # Extend the set of file extensions:
-        file_extensions = ('.dae', '.urdf', '.sdf', '.xacro', '.yaml', '.csv')
+        file_extensions = ('.urdf', '.sdf', '.xacro', '.yaml')
 
         # We create a single pattern that tries to match either:
         #   1) A path in quotes (group 1)
@@ -92,8 +92,8 @@ class ServiceToTopic(Node):
         #   - |>([^<>]*\.(?:extensions))< captures unquoted paths between > and <
         #
         pattern = (
-            r'(?:["\']([^"\'<>]*\.(?:dae|urdf|sdf|xacro|yaml|csv))["\'])'
-            r'|>([^<>]*\.(?:dae|urdf|sdf|xacro|yaml|csv))<'
+            r'(?:["\']([^"\'<>]*\.(?:urdf|sdf|xacro|yaml))["\'])'
+            r'|>([^<>]*\.(?:urdf|sdf|xacro|yaml))<'
         )
 
         # Run the findall; each match is a tuple (group1, group2)
